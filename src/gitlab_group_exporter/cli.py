@@ -103,7 +103,7 @@ def main(
 
     settings = Settings()
 
-    token = token or settings.gitlab_private_token.get_secret_value()
+    token = token or settings.private_token.get_secret_value()
     if not token:
         console.print("[red]Error: No GitLab token provided. Use --token or GITLAB_PRIVATE_TOKEN env var[/red]")
         raise typer.Exit(1)
@@ -119,9 +119,7 @@ def main(
 
     try:
         gl = get_gitlab_client(server_url, token)
-        console.log("Getting user")
         gl.auth()  # Validate token
-        console.log("Got user")
     except GitlabAuthenticationError as e:
         console.print(f"[red]Error: Invalid GitLab token: {e}[/red]")
         raise typer.Exit(1) from e
@@ -151,10 +149,9 @@ def main(
     table.add_column("Name", style="cyan")
     table.add_column("Path", style="magenta")
     table.add_column("Visibility", style="green")
-    table.add_column("URL", style="blue")
 
     for proj in projects:
-        table.add_row(proj.name, proj.path, proj.visibility, proj.url)
+        table.add_row(proj.name, proj.path, proj.visibility)
 
     console.print(table)
     console.print(f"\n[green]✓ Exported to:[/green] {output_dir.absolute()}")

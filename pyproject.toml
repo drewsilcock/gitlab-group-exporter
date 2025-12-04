@@ -1,7 +1,7 @@
 [project]
 name = "gitlab-group-exporter"
 version = "0.1.0"
-description = "Add your description here"
+description = "Export group and its projects from GitLab automatically"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -9,6 +9,12 @@ dependencies = [
     "python-gitlab>=7.0.0",
     "rich>=14.2.0",
     "typer>=0.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.7",
+    "ty>=0.0.1a29",
 ]
 
 [project.scripts]
@@ -32,10 +38,4 @@ select = [
     "C4", # flake-comprehensions
     "SIM", # flake8-simplify
     "I", # isort
-]
-
-[dependency-groups]
-dev = [
-    "ruff>=0.14.7",
-    "ty>=0.0.1a29",
 ]

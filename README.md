@@ -1,57 +1,36 @@
 # GitLab Group Export CLI
 
-Export all projects from a GitLab group to a JSON file.
+Ever have to export a group and all the projects inside that group from GitLab and are fed up with how long it takes to do manually? I have, and I got bored of doing it.
 
-## Installation
+This script automates the process. You give it a group and it exports the group and all the projects within that groups, and puts all the tar.gz files into a nice neat folder for handover.
 
-Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/):
+## Getting Started
 
-```bash
-uv run gitlab-export.py mygroup
-```
+I wrote it using Python 3.12 – it probably works with 3.10+.
 
-## Usage
+Oh, and you need [uv](https://docs.astral.sh/uv/).
 
 ```bash
-# Export to group_name.json
-uv run gitlab-export.py mygroup
-
-# Specify output file
-uv run gitlab-export.py mygroup --output projects.json
-
-# Use a different GitLab instance
-uv run gitlab-export.py mygroup --url https://gitlab.example.com
+uv run gitlab-export-group my-group --server-url https://gitlab.example.com
 ```
+
+## Configuration
+
+The CLI expects the group name. You can also pass in the server URL and GitLab private token into the CLI, where it will take precedence over the environment variables.
+
+The following environment variables are supported:
+
+- `PRIVATE_TOKEN`: Your GitLab private token.
+- `SERVER_URL`: The URL of your GitLab instance.
+
+You can put them in a `.env` file.
 
 ## Authentication
 
-The script uses a GitLab personal access token for authentication.
+The script uses a private token for authentication – this can be a Personal Access Token (PAT) or group token. It can't be a project token because then we couldn't export the group.
 
-### Generate a Token
+For details on creating a PAT, see: https://docs.gitlab.com/user/profile/personal_access_tokens/#create-a-personal-access-token
 
-1. Go to your GitLab instance (e.g., https://gitlab.com)
-2. Click your profile icon → **Settings** → **Access Tokens**
-3. Create a new token with at least the `api` and `read_api` scopes
-4. Copy the token
+For details on creating a group token, see: https://docs.gitlab.com/ee/user/group/settings/group_access_tokens.html#create-a-group-access-token
 
-### Provide the Token
-
-Pass it as an option:
-```bash
-uv run gitlab-export.py mygroup --token glpat-xxx
-```
-
-Or set it as an environment variable:
-```bash
-export GITLAB_PRIVATE_TOKEN=glpat-xxx
-uv run gitlab-export.py mygroup
-```
-
-## Output
-
-The script exports a JSON file containing:
-- Project name, path, and full path with namespace
-- Project URL and visibility (public/private)
-- Description and creation/activity timestamps
-
-Projects are displayed in a table before export completes.
+The token needs to have `api`, `read_api` and `read_user` scopes.
